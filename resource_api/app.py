@@ -6,19 +6,18 @@ APP = FastAPI(title="Resource API")
 
 @APP.get("/resource")
 def resource(claims: dict = Depends(get_claims)):
-    decision = evaluate_request_context(claims, "/resource", "GET")
+    decision, reason = evaluate_request_context(claims, "/resource", "GET")
     if decision == "deny":
-        raise HTTPException(status_code=403, detail="denied by context policy")
+        raise HTTPException(status_code=403, detail=reason)
     if decision == "challenge":
-        # For PoC, simulate an MFA step-up requirement
-        return {"status": "mfa_required", "reason": "context challenge"}
-    return {"status": "ok", "subject": claims.get("sub"), "role": claims.get("role")}
+        return {"status": "mfa_required", "reason": reason}
+    return {"status": "ok", "reason": reason, "subject": claims.get("sub"), "role": claims.get("role")}
 
 @APP.get("/export")
 def export(claims: dict = Depends(get_claims)):
-    decision = evaluate_request_context(claims, "/export", "GET")
+    decision, reason = evaluate_request_context(claims, "/export", "GET")
     if decision == "deny":
-        raise HTTPException(status_code=403, detail="denied by context policy")
+        raise HTTPException(status_code=403, detail=reason)
     if decision == "challenge":
-        return {"status": "mfa_required", "reason": "sensitive endpoint"}
-    return {"status": "export_ready"}
+        return {"status": "mfa_required", "reason": reason}
+    return {"status": "export_ready", "reason": reason}

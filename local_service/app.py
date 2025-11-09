@@ -11,7 +11,7 @@ APP = FastAPI(title="Local Service (Decentralised Auth)")
 # --- Config (env-driven; independent from IdP) ---
 LOCAL_SECRET = os.getenv("LOCAL_JWT_SECRET", "local-secret")
 LOCAL_ALG = os.getenv("LOCAL_JWT_ALG", "HS256")
-LOCAL_TTL = int(os.getenv("LOCAL_TOKEN_TTL_SECONDS", "600"))  # seconds
+LOCAL_TTL = int(os.getenv("LOCAL_TOKEN_TTL_SECONDS", "60"))  # seconds
 COOKIE_NAME = os.getenv("LOCAL_COOKIE_NAME", "local_session")
 COOKIE_SECURE = os.getenv("LOCAL_COOKIE_SECURE", "false").lower() == "true"
 HOST = os.getenv("HOST", "0.0.0.0")
